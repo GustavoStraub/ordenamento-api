@@ -15,5 +15,23 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/:id', async (req, res) => {
+  try {
+    const SingleUser = await User.findOne({_id: req.params.id})
+    res.status(200).send(SingleUser)
+  } catch (err) {
+    res.status(500).send(err)
+  }
+})
+
+router.get('/:id/characters', async (req, res) => {
+  try {
+    const SingleUser = await User.findOne({_id: req.params.id})
+    res.status(200).send(SingleUser.Characters)
+  } catch (err) {
+    res.status(500).send(err)
+  }
+})
+
 
 module.exports = router
