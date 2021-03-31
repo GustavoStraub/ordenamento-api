@@ -1,8 +1,9 @@
 {
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index",
-    "run": "node index"
+    "start": "node index",
+    "run": "node index",
+    "dev": "nodemon index"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
