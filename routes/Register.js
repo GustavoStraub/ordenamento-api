@@ -7,12 +7,9 @@ require('dotenv').config()
 
 const { User } = require('../models/models')
 
-router.get('/', async (req, res) => {
-  res.send({ message: "aoba" })
-})
-
-router.post('/user', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
+    req.body.Username = req.body.Username.toLowerCase()
     const { Username, Password } = req.body
     const UserExist = await User.findOne({ Username })
     if (UserExist) {
@@ -30,6 +27,7 @@ router.post('/user', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
+  req.body.Username = req.body.Username.toLowerCase()
   try {
     const { Username, Password } = req.body
     const UserExists = await User.findOne({ Username })

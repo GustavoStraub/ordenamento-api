@@ -27,6 +27,7 @@ router.get('/create', async (req, res) => {
     let characterCreated = await Character.findOne({ Name: 'Cleidson, O Pica' })
     USER.updateOne({ $push: { Characters: characterCreated } }).exec()
     res.status(200).send(USER)
+    
   } catch (err) {
     res.status(500).send(err)
   }

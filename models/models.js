@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const Character = new Schema({
   Name: String,
-  FOR: String
+  FOR: String,
 }, { versionKey: false, strict: false })
 
 const User = new Schema({
