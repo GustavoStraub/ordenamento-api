@@ -7,6 +7,7 @@ const
 
 const
   Register = require('./routes/Register')
+  Users = require('./routes/Users')
 
 const app = express()
 app.use(cors())
@@ -30,3 +31,4 @@ app.get('/', async (req, res) => {
 })
 
 app.use('/register', Register)
+app.use('/users', Users)
