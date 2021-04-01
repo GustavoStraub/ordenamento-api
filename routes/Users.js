@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const jwt = require('jwt-simple')
 
 require('dotenv').config()
 
@@ -17,17 +18,36 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const SingleUser = await User.findOne({_id: req.params.id})
+    const SingleUser = await User.findOne({ _id: req.params.id })
     res.status(200).send(SingleUser)
   } catch (err) {
     res.status(500).send(err)
   }
 })
 
-router.get('/:id/characters', async (req, res) => {
+router.get('/:Token', async (req, res) => {
   try {
-    const SingleUser = await User.findOne({_id: req.params.id})
-    res.status(200).send(SingleUser.Characters)
+    if (!req.params.Token) {
+      res.status(500).send({ error: "Token não enviado" })
+    } else {
+      const Token = jwt.decode(req.params.Token, process.env.SECRET)
+      const SingleUser = await User.findOne({ _id: Token })
+      res.status(200).send(SingleUser)
+    }
+  } catch (err) {
+    res.status(500).send(err)
+  }
+})
+
+router.get('/:Token/characters', async (req, res) => {
+  try {
+    if (!req.params.Token) {
+      res.status(500).send({ error: "Token não enviado" })
+    } else {
+      const Token = jwt.decode(req.params.Token, process.env.SECRET)
+      const SingleUser = await User.findOne({ _id: Token })
+      res.status(200).send(SingleUser.Characters)
+    }
   } catch (err) {
     res.status(500).send(err)
   }
