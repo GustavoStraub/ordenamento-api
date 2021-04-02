@@ -1,18 +1,22 @@
-require('dotenv').config()
-const
-  express = require('express'),
+const express = require('express'),
   cors = require('cors'),
   mongoose = require('mongoose'),
-  bodyParser = require('body-parser')
+  bodyParser = require('body-parser'),
+  path = require('path')
+
+require('dotenv').config()
 
 const
-  Register = require('./routes/Register')
-  Users = require('./routes/Users')
+  Register = require('./routes/Register'),
+  Users = require('./routes/Users'),
   Characters = require('./routes/Characters')
 
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use('/uploads', express.static('uploads'))
 
 mongoose.connect(
   `mongodb+srv://gustavo:${process.env.MONGO_PASSWORD}@ordenamento.scpfh.mongodb.net/Ordenamento?retryWrites=true&w=majority`,
