@@ -22,27 +22,33 @@ router.get('/', async (req, res) => {
 
 router.post('/image', multer(multerConfig).single('file'), async (req, res) => {
   try {
-    const { originalname: Name, Size, key, location: url = '' } = req.file
-    const newKey = await key.split(" ").join("")
-    const ImageCreated = await Image.create({
-      Name,
-      Size,
-      key: newKey,
-      url,
-    })
     const ImageToCharacter = await Character.findOne({ _id: req.headers.character })
-    if (!ImageToCharacter.ImgId) {
-
-      await ImageToCharacter.updateOne({ Img: ImageCreated.url, ImgId: ImageCreated._id }).exec()
-      return res.status(200).send(ImageCreated)
-
+    
+    if (!ImageToCharacter) {
+      res.status(400).json({ "error": "Nenhum personagem encontrado a partir deste ID" })
     } else {
 
-      const ImageToRemove = await Image.findById(ImageToCharacter.ImgId)
-      await ImageToRemove.remove()
-      console.log('asd')
-      await ImageToCharacter.updateOne({ Img: ImageCreated.url, ImgId: ImageCreated._id }).exec()
-      return res.status(200).json({ "message": `Foto atualizada ao personagem ${ImageToCharacter.Name}` })
+      const { originalname: Name, Size, key, location: url = '' } = req.file
+      const newKey = await key.split(" ").join("")
+      const ImageCreated = await Image.create({
+        Name,
+        Size,
+        key: newKey,
+        url,
+      })
+      if (!ImageToCharacter.ImgId) {
+
+        await ImageToCharacter.updateOne({ Img: ImageCreated.url, ImgId: ImageCreated._id }).exec()
+        return res.status(200).send(ImageCreated)
+
+      } else {
+
+        const ImageToRemove = await Image.findById(ImageToCharacter.ImgId)
+        await ImageToRemove.remove()
+        console.log('asd')
+        await ImageToCharacter.updateOne({ Img: ImageCreated.url, ImgId: ImageCreated._id }).exec()
+        return res.status(200).json({ "message": `Foto atualizada ao personagem ${ImageToCharacter.Name}` })
+      }
     }
   } catch (err) {
     res.status(500).send(err)
