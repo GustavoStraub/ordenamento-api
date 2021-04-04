@@ -6,7 +6,7 @@ const Storage = multer.diskStorage({
     cb(null, path.resolve(__dirname, '..', 'uploads'))
   },
   filename: (req, file, cb) => {
-    file.key = `${file.originalname}`
+    file.key = `${file.originalname.split(" ").join("")}`
     cb(null, file.key)
   }
 })
@@ -22,7 +22,8 @@ module.exports = {
     const allowedMimes = [
       'image/jpeg',
       'image/pjpeg',
-      'image/png'
+      'image/png',
+      'image/jpg'
     ]
 
     if (allowedMimes.includes(file.mimetype)) {

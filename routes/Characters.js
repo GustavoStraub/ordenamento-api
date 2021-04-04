@@ -23,23 +23,25 @@ router.get('/', async (req, res) => {
 router.post('/image', multer(multerConfig).single('file'), async (req, res) => {
   try {
     const { originalname: Name, Size, key, location: url = '' } = req.file
+    const newKey = await key.split(" ").join("")
     const ImageCreated = await Image.create({
       Name,
       Size,
-      key,
+      key: newKey,
       url,
     })
     const ImageToCharacter = await Character.findOne({ _id: req.headers.character })
-    console.log(ImageToCharacter.ImgId)
     if (!ImageToCharacter.ImgId) {
-      console.log('não')
-      await ImageToCharacter.updateOne({ Img: ImageCreated.url, ImgId: ImageToCharacter._id }).exec()
+
+      await ImageToCharacter.updateOne({ Img: ImageCreated.url, ImgId: ImageCreated._id }).exec()
       return res.status(200).send(ImageCreated)
+
     } else {
-      console.log('aoba')
-      const ImageToRemove = Image.findOne({ _id: ImageToCharacter._id }).exec()
+
+      const ImageToRemove = await Image.findById(ImageToCharacter.ImgId)
       await ImageToRemove.remove()
-      await ImageToCharacter.updateOne({ Img: ImageCreated.url, ImgId: ImageToCharacter._id }).exec()
+      console.log('asd')
+      await ImageToCharacter.updateOne({ Img: ImageCreated.url, ImgId: ImageCreated._id }).exec()
       return res.status(200).json({ "message": `Foto atualizada ao personagem ${ImageToCharacter.Name}` })
     }
   } catch (err) {

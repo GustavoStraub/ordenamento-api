@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const fs = require('fs')
+const path = require('path')
 
 const Character = new Schema({
   Name: String,
@@ -28,7 +30,7 @@ Image.pre('save', function () {
 })
 
 Image.pre('remove', function () {
-  return fs.unlink(path.resolve(__dirname, '..', 'uploads', this.Key), (err => {
+  fs.unlink(path.resolve(__dirname, '..', 'uploads', this.key), (err => {
     if (err) console.log(err)
     else {
       console.log("\nDeleted file");
