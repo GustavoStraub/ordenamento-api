@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const fs = require('fs')
 const path = require('path')
+const aws = require('aws-sdk')
+const s3 = new aws.S3()
 
 const Character = new Schema({
   Name: String,
@@ -30,12 +32,16 @@ Image.pre('save', function () {
 })
 
 Image.pre('remove', function () {
-  fs.unlink(path.resolve(__dirname, '..', 'uploads', this.key), (err => {
-    if (err) console.log(err)
-    else {
-      console.log("\nDeleted file");
-    }
-  }))
+  return s3.deleteObject({
+    Bucket: 'uploadexamples3',
+    Key: this.key
+  }).promise()
+  // fs.unlink(path.resolve(__dirname, '..', 'uploads', this.key), (err => {
+  //   if (err) console.log(err)
+  //   else {
+  //     console.log("\nDeleted file");
+  //   }
+  // }))
 })
 
 module.exports = {

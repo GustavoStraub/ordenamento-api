@@ -23,15 +23,16 @@ router.get('/', async (req, res) => {
 router.post('/image', multer(multerConfig).single('file'), async (req, res) => {
   try {
     const ImageToCharacter = await Character.findOne({ _id: req.headers.character })
-    
+
     if (!ImageToCharacter) {
       res.status(400).json({ "error": "Nenhum personagem encontrado a partir deste ID" })
     } else {
 
       const { originalname: Name, Size, key, location: url = '' } = req.file
       const newKey = await key.split(" ").join("")
+      const newName = await Name.split(" ").join("")
       const ImageCreated = await Image.create({
-        Name,
+        Name: newName,
         Size,
         key: newKey,
         url,
@@ -90,7 +91,8 @@ router.post('/create', async (req, res) => {
 router.put('/update/:id', async (req, res) => {
   try {
     const CharacterTobeUpdated = await Character.find({ _id: req.params.id })
-    if (CharacterTobeUpdated) {
+    console.log(CharacterTobeUpdated)
+    if (!CharacterTobeUpdated) {
       res.status(400).json({ "error": "Nenhum personagem foi encontrado com esse ID" })
     } else {
       await Character.updateOne({ _id: req.params.id }, req.body)
