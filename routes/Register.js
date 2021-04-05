@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
     const { Username, Password } = req.body
     const UserExist = await User.findOne({ Username })
     if (UserExist) {
-      res.status(400).send({ error: "Username já cadastrado!" })
+      res.status(400).json({ "error": "Username já cadastrado!" })
     } else {
       req.body.Password = bcrypt.hashSync(Password, bcrypt.genSaltSync())
       let newUser = new User(req.body)
