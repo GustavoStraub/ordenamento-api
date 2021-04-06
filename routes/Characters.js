@@ -107,7 +107,7 @@ router.put('/update/:id', async (req, res) => {
 router.delete('/delete/:id', async (req, res) => {
   try {
     const CharacterTobeDeleted = await Character.findOne({ _id: req.params.id }).exec()
-    if (!CharacterTobeDeleted.Img) {
+    if (!CharacterTobeDeleted) {
       res.status(400).json({
         "error": "Nenhum personagem foi encontrado com esse ID"
       })
